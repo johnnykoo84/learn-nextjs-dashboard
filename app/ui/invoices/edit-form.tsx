@@ -9,6 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
+import { updateInvoice } from '@/app/lib/actions';
 
 export default function EditInvoiceForm({
   invoice,
@@ -17,8 +18,20 @@ export default function EditInvoiceForm({
   invoice: InvoiceForm;
   customers: CustomerField[];
 }) {
+  /*
+    The bind() method in JavaScript is used to create a new function that, when called, has its this keyword set to the provided value, with a given sequence of arguments preceding any provided when the new function is called.
+    In your case, updateInvoice.bind(null, invoice.id) is creating a new function updateInvoiceWithId that, when called, will call updateInvoice with invoice.id as the first argument.
+    
+    Here's what's happening:
+    null is passed as the first argument to bind(), which means that this inside updateInvoice will not be changed (it will be null or the global object depending on whether strict mode is in effect).
+    invoice.id is passed as the second argument to bind(), which means that invoice.id will be passed as the first argument to updateInvoice when updateInvoiceWithId is called.
+    So, if you call updateInvoiceWithId(formData), it's the same as calling updateInvoice(invoice.id, formData).
+    The bind() method is used here to "pre-fill" the first argument of updateInvoice. This is a technique known as "partial application". It's useful when you want to create a new function that calls an existing function with some arguments already fixed.
+  */
+  const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
+
   return (
-    <form>
+    <form action={updateInvoiceWithId}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">
